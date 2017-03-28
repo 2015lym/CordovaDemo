@@ -1,0 +1,340 @@
+<!--文件选择器-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>文件选择器</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<!-- iOS有一个默认开启的功能, 会把网页中的数字自动识别为电话号码, 并且改变文字的颜色和样式,这里关闭电话识别 -->
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="../css/mui.min.css">
+<link rel="stylesheet" href="../mycss/ListCommon.css">
+<link rel="stylesheet" href="../css/app.css">
+</head>
+
+<body class="mui-fullscreen">
+	<!--页面主结构开始-->
+	<div id="app" class="mui-views">
+		<div class="mui-view">
+			<div class="mui-navbar"></div>
+			<div class="mui-pages"></div>
+		</div>
+	</div>
+	<!--页面主结构结束-->
+	<!--单页面开始-->
+	<div id="page1" class="mui-page">
+		<!--页面标题栏开始-->
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<!-- 用在tab页面，隐藏返回按钮-->
+			<button type="button"
+				class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>返回
+			</button>
+			<h1 id="page1Title" class="mui-center mui-title">选择文件</h1>
+			<button id="page1BtnSubmit" type="button"
+				class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">
+				<span class="mui-icon mui-icon-right-nav"></span>菜单
+			</button>
+		</div>
+		<!--页面标题栏结束-->
+		<!--页面主内容区开始-->
+		<div class="mui-page-content">
+			<div id="page1Pullrefresh" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-content-padded tipAera">
+						<p style="text-indent: 22px;">
+							点击菜单可添加文件。当前行左滑可删除对应的已选文件
+						</p>
+					</div>
+					<ul id="listview1" class="mui-table-view mui-table-view-chevron " style="display: none;margin-top: 10px;">
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--页面主内容区结束-->
+	</div>
+	<div id="sheet1"
+		class="mui-popover mui-popover-bottom mui-popover-action ">
+		<!-- 可选择菜单 -->
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell"><a href="#" myval="si1SetResult">返回已选文件</a>
+			</li>
+			<li class="mui-table-view-cell"><a href="#"
+				myval="si1TakePictures">添加图片...</a></li>
+		</ul>
+		<!-- 取消菜单 -->
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell"><a href="sheetEmail"
+				style="color: #FF3B30;"><b>取消</b></a></li>
+		</ul>
+	</div>
+</body>
+<script src="../js/mui.min.js "></script>
+<script src="../js/mui.view.js "></script>
+<script src="../libs/ProperWebPage.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="../libs/zepto.min.js"></script>
+<script>
+	function getDataSizeStr(fileLength) {
+		fileLength=parseFloat(fileLength);
+    	if(fileLength<1024){
+    		return fileLength.toFixed(0) + "bytes";
+    	}else if (fileLength < 1048576){
+    		return (fileLength / 1024.0).toFixed(1)+"KB";
+    	}else if (fileLength < 1073741824){
+    		return (fileLength / 1024.0 / 1024.0).toFixed(2)+"MB";
+    	}else{
+    		return (fileLength / 1024.0 / 1024.0/1024.0).toFixed(2)+"GB";
+    	}
+	}
+</script>
+<script>
+	var initData = {};
+	//全局数据
+	var dataList1 = [];
+	var pageInited = false;
+	//初始化单页view
+	var viewApi = mui('#app').view({
+		defaultPage : '#page1'
+	});
+	//初始化单页的区域滚动
+	mui('.mui-scroll-wrapper').scroll();
+
+	var view = viewApi.view;
+	(function(mui) {
+		//处理view的后退与webview后退
+		mui.back = function() {
+			if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+				viewApi.back();
+			} else { //执行webview后退
+				var btnArray = [ '取消', '确定' ];
+				mui.confirm('返回当前选择的文件？', '消息确认', btnArray, function(e) {
+					if (e.index == 1) {
+						setCurrentSelectResult();
+					} else {
+						properWebPage.closeWebPage();
+					}
+				});
+			}
+		};
+
+	})(mui);
+
+	document.addEventListener('deviceready', function() {
+
+		properWebPage.getInitParam(function(data) {
+			pageInited = true;
+			initData = data;
+			if(initData.title){
+				$('#page1Title').text(initData.title);
+			}
+			var selectedValues = [];
+			if (initData['jsonStrSelectedValues']) {
+				selectedValues = JSON.parse(initData['jsonStrSelectedValues']);
+				properWebPage.showLoading();
+				listView1AppendRows(selectedValues);
+				properWebPage.hideLoading();
+			}
+			//alert(JSON.stringify(initData));
+			
+			
+		});
+
+	}, false);
+	
+
+	function listView1AppendRows(datas) {
+		var i = dataList1.length - 1;
+		for (var j = 0; j < datas.length; j++) {
+			dataList1.push(datas[j]);
+		}
+		var $list = $("#listview1");
+		if(dataList1.length>0){
+			$(".tipAera").hide();
+			$list.show();
+		}
+
+		for (i++; i < dataList1.length; i++) {
+			var m = dataList1[i];
+			var displayName = m.displayName;
+			var title = "&nbsp;" + displayName;
+			var subTitle = "&nbsp;" + getDataSizeStr(m.fileLength);
+			var image = m.image;
+			//image='';
+			if (!image) {
+				var to = 'other';
+				if (displayName) {
+					if (displayName.isFileType("png")
+							|| displayName.isFileType("jpg")
+							|| displayName.isFileType("jpeg")) {
+						to = "png";
+					} else if (displayName.isFileType("xls")
+							|| displayName.isFileType("xlsx")) {
+						to = "excel";
+					} else if (displayName.isFileType("doc")
+							|| displayName.isFileType("docx")) {
+						to = "word";
+					} else if (displayName.isFileType("ppt")
+							|| displayName.isFileType("pptx")) {
+						to = "ppt";
+					} else if (displayName.isFileType("zip")
+							|| displayName.isFileType("rar")) {
+						to = "zip";
+					} else if (displayName.isFileType("pdf")) {
+						to = "pdf";
+					} else if (displayName.isFileType("txt")) {
+						to = "txt";
+					} else {
+						to = "other";
+					}
+				}
+				image = "../images/filetypes/" + to + ".png";
+			}
+			var tpl = '<li class="mui-table-view-cell mui-media"  myIdx=\"'+i+'\" >'
+					+ '<div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red">删除</a></div>'
+					+ '<div class="mui-slider-handle mui-table"><div class="mui-table-cell">'
+					+ '					<a class=""   >'
+					+ '						<img class="mui-media-object mui-pull-left" src="'+image+'" >'
+					+ '						<div class="mui-media-body">'
+					+ title
+					+ '							<p class="mui-ellipsis">'
+					+ subTitle
+					+ '</p>'
+					+ '						</div>' + '					</a>' + '</div></div>' + '</li>';
+			//alert(tpl);
+			$list.append(tpl);
+		}
+	}
+	document.getElementById("page1BtnSubmit").addEventListener('tap',
+			function() {
+				mui('#sheet1').popover('toggle');
+			});
+
+	mui("#listview1").on('tap', '.mui-table-view-cell', function() {
+		//获取id
+		var idx = this.getAttribute("myIdx");
+		var currentValue = dataList1[idx];
+		alert(JSON.stringify(currentValue));
+	});
+	//向左拖拽后显示操作图标，删除
+	$('#listview1').on('tap', '.mui-btn', function(event) {
+		var elem = this;
+		var li = elem.parentNode.parentNode;
+		var btnArray = [ '确认', '取消' ];
+		mui.confirm('确认删除该条记录？',  '确认', btnArray, function(e) {
+			if (e.index == 0) {
+				var idx = li.getAttribute("myIdx");
+				var currentValue = dataList1[idx];
+				dataList1.splice(idx, 1);
+				//alert(JSON.stringify(currentValue));
+				li.parentNode.removeChild(li);
+			} else {
+				setTimeout(function() {
+					$.swipeoutClose(li);
+				}, 0);
+			}
+		});
+	});
+
+	mui('body')
+			.on(
+					'tap',
+					'.mui-popover-action li>a',
+					function() {
+						var a = this, parent;
+						//根据点击按钮，反推当前是哪个actionsheet
+						for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+							if (parent.classList.contains('mui-popover-action')) {
+								break;
+							}
+						}
+
+						//关闭actionsheet
+						mui('#' + parent.id).popover('toggle');
+						var myval = a.getAttribute('myval');
+						if (myval == 'si1SetResult') {
+							setCurrentSelectResult();
+						} else if (myval == 'si1TakePictures') {
+							takePictures();
+						}
+
+					});
+
+	//返回当前选择结果
+	function setCurrentSelectResult() {
+		var minValue = initData['min_value'];
+		var maxValue = initData['max_value'];
+		if (minValue != undefined) {
+			minValue = parseInt(minValue);
+			if (dataList1.length < minValue) {
+				mui.alert('您最少应该添加' + minValue + '个文件，当前已添加' + dataList1.length
+						+ '个文件，请继续添加', '消息');
+				return;
+			}
+		}
+		if (maxValue != undefined) {
+			maxValue = parseInt(maxValue);
+			if (dataList1.length > maxValue) {
+				mui.alert('您最多应该添加' + maxValue + '个文件，当前已添加' + dataList1.length
+						+ '个文件，请删除文件', '消息');
+				return;
+			}
+		}
+		//返回数据
+		var params = {};
+		params["form_type"] = initData['form_type'];
+		params["param_name"] = initData['param_name'];
+		params["jsonStrSelectedValues"] = JSON.stringify(dataList1);
+
+		properWebPage.nativeExec('OaTpl', 'setSelectFileResult', [ params ],
+				function(rtn) {
+					properWebPage.closeWebPage();
+				}, function(e) {
+					console.log(e);
+				});
+	}
+	function takePictures() {
+		var params = {};
+		var max=0;
+		var maxValue = initData['max_value'];
+		if (maxValue != undefined) {
+			maxValue = parseInt(maxValue);
+			max=maxValue-dataList1.length;
+		}else{
+			max=8;
+		}
+		if(max<=0){
+			mui.alert('您最多应该添加' + maxValue + '个文件，当前已添加' + dataList1.length
+					+ '个文件，请删除文件后，才能添加图片', '消息');
+			return;
+		}
+		params['max']=max;
+		properWebPage.takePictures(params, function(rtn) {
+			var rows=rtn['rows'];
+			if(rows&&rows.length){
+				for(var i=0;i<rows.length;i++){
+					var row=rows[i];
+					var filePath=row.filePath;
+					if(row.fileLength&&filePath){
+						row.image="file://"+filePath;
+						row.displayName=filePath.substring(filePath.lastIndexOf('/')+1);
+					}
+					
+				}
+				listView1AppendRows(rows);
+			}
+			//alert(JSON.stringify(rtn));
+			
+			
+		}, function(e) {
+			console.log(e);
+		});
+	}
+</script>
+
+</html>

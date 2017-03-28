@@ -1,0 +1,280 @@
+<!--查询列表页-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>查询列表页</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!-- iOS有一个默认开启的功能, 会把网页中的数字自动识别为电话号码, 并且改变文字的颜色和样式,这里关闭电话识别 -->
+	<meta name="format-detection" content = "telephone=no">
+	<link rel="stylesheet" href="../css/mui.min.css">
+	
+	<link rel="stylesheet" href="../css/app.css">
+	<link rel="stylesheet" href="../mycss/ListCommon.css">
+	<style>
+		.mui-table-view {
+				margin-top: 20px;
+			}
+	</style>
+</head>
+
+<body class="mui-fullscreen">
+<!--页面主结构开始-->
+<div id="app" class="mui-views">
+	<div class="mui-view">
+		<div class="mui-navbar">
+		</div>
+		<div class="mui-pages">
+		</div>
+	</div>
+</div>
+<!--页面主结构结束-->
+<!--单页面开始-->
+<div id="page1" class="mui-page">
+	<!--页面标题栏开始-->
+	<div class="mui-navbar-inner mui-bar mui-bar-nav">
+		<!-- 用在tab页面，隐藏返回按钮-->
+		<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+			<span class="mui-icon mui-icon-left-nav"></span>返回
+		</button>
+		<h1 id="page1Title" class="mui-center mui-title"></h1>
+		<button id="page1BtnSubmit" style="display: none;" type="button" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">
+			<span class="mui-icon mui-icon-right-nav"></span>查询条件
+		</button>
+	</div>
+	<!--页面标题栏结束-->
+	<!--页面主内容区开始-->
+	<div class="mui-page-content">
+		<div id="page1Pullrefresh" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="listview1" class="mui-table-view mui-table-view-chevron ">
+
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!--页面主内容区结束-->
+</div>
+
+</body>
+<script src="../js/mui.min.js "></script>
+<script src="../js/mui.view.js "></script>
+<script src="../libs/ProperWebPage.js" type="text/javascript"
+		charset="utf-8"></script>
+<script src="../libs/zepto.min.js"></script>
+<script src="../myjs/QuerySubListCommon.js"></script>
+<script>
+	
+</script>
+<script>
+	var initData={};
+	var currentPageNo=1;
+	//全局数据
+	var dataList1=[];
+	var pageSize=20;
+	var pageInited=false;
+	mui.init({
+		pullRefresh: {
+			container: '#page1Pullrefresh',
+			down: {
+				callback: page1PulldownRefresh
+			},
+			up: {
+				contentrefresh: '正在加载...',
+				callback: page1PullupRefresh
+			}
+		}
+	});
+	
+	//进入详细页
+	function gotoDataDetail(idx,callback,errCallback){
+		var rowData=dataList1[idx];
+		if(rowData['style']=='no_detail'){
+			properWebPage.showToast('无详细信息');
+		}else{
+			var params={};
+			params[K_SYSTEMID]=V_SYSTEMID_queryDetail;
+			params['serviceName']=initData['serviceName'];
+			params['defaultTab']=initData['defaultTab'];
+			params['style']=rowData['style'];
+			params['bussinessId']=rowData['id'];
+			params['data']=rowData['data'];//扩展参数
+			if(rowData.detailTitleBarText){
+				params['title']=rowData.detailTitleBarText;
+			}
+			//alert(JSON.stringify(params));
+			properWebPage.openTheApp(params);
+		}
+	}
+		/**
+		 * 下拉刷新具体业务实现
+		 */
+		function page1PulldownRefresh() {
+			if(!pageInited){
+				mui('#page1Pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				return;
+			}
+
+			currentPageNo=1;
+			QuerySubListCommon.getDataList(function(rtnData) {
+				initData['queryCondition']=rtnData['query_conditon'];
+				if(QuerySubListCommon.getQueryConditionAry().length==0){
+					$('#page1BtnSubmit').hide();
+				}else{
+					$('#page1BtnSubmit').show();
+				}
+				//清空已有数据
+				dataList1=[];
+				var $list=$("#listview1");
+				$list.html('');
+				//下载更多数据
+				var datas=rtnData.result_list;
+				var hasData=datas&&datas.length>0;
+				if(hasData){
+					listView1AppendRows(datas);
+				}
+				mui('#page1Pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				
+
+			},function(){
+				mui('#page1Pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+			});
+		}
+		/**
+		 * 上拉加载具体业务实现
+		 */
+		function page1PullupRefresh() {
+			if(!pageInited){
+				mui('#page1Pullrefresh').pullRefresh().endPullupToRefresh(false); //refresh completed
+				return;
+			}
+			if(dataList1.length==0){
+				currentPageNo=1;
+			}else{
+				currentPageNo++;
+			}
+			QuerySubListCommon.getDataList(function(rtnData) {
+				//下载更多数据
+				var datas=rtnData.result_list;
+				var hasData=datas&&datas.length>0;
+				if(hasData){
+					listView1AppendRows(datas);
+				}else{
+					currentPageNo--;//当前页恢复到查询之前
+					if(currentPageNo<1){
+						currentPageNo=1;
+					}
+				}
+				mui('#page1Pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+			},function(){
+				mui('#page1Pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+			});
+			
+		}
+
+		//初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#page1'
+		});
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+
+		var view = viewApi.view;
+		(function(mui) {
+			//处理view的后退与webview后退
+			mui.back = function() {
+				if(viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					properWebPage.closeWebPage();
+				}
+			};
+
+		})(mui);
+
+		document.addEventListener('deviceready', function() {
+
+			properWebPage.getInitParam(function(data) {
+				pageInited=true;
+				initData=data;
+				var queryParams=initData['queryParams'];
+				if(!queryParams){
+					queryParams={};
+					initData['queryParams']=queryParams;
+				}
+				if(initData['jsonStrQueryCondition']){
+					var queryCondition0=JSON.parse(initData['jsonStrQueryCondition']);
+					for(var i=0;i<queryCondition0.length;i++){
+						var m=queryCondition0[i];
+						if(!m['query_type']){
+							m['query_type']='hidden';
+						}
+						var queryKey=m['query_value'];
+						var queryVal=m['query_default'];
+						if(queryKey&&queryVal!=undefined){
+							queryParams[queryKey]=queryVal;
+						}
+					}
+					initData['queryCondition0']=queryCondition0;
+					//alert(JSON.stringify(queryCondition0));
+					//alert(JSON.stringify(queryParams));
+				}
+				initPage1();
+			});
+
+		}, false);
+
+
+		//demo data end
+
+		function initPage1(){
+			$('#page1Title').text(initData.title);
+			
+			page1PulldownRefresh();//加载数据
+		}
+
+		function listView1AppendRows(datas){
+			var i=dataList1.length-1;
+			for(var j=0;j<datas.length;j++){
+				dataList1.push(datas[j]);
+			}
+			var $list=$("#listview1");
+
+			for(i++;i<dataList1.length;i++){
+				var rowData=dataList1[i];
+				
+				var title=QuerySubListCommon.funConvertListRowTitle(rowData.title);
+				/* m.titleStyle 这里未用*/
+				var clazzNavigateRight=" mui-navigate-right ";
+				if(rowData['style']=='no_detail'){
+					clazzNavigateRight="";
+				}
+				
+				var tpl='<li class="mui-table-view-cell mui-media"  myIdx=\"'+i+'\" >'+
+				'					<a style="padding-right:30px" class=" '+clazzNavigateRight+'"   >'+
+				'						<div  class="mui-media-body mui-ellipsis">'+title+
+				'						</div>'+
+				'					</a>'+
+				'</li>';
+				$list.append(tpl);
+			}
+		}
+
+
+		document.getElementById("page1BtnSubmit").addEventListener('tap', function() {
+			QuerySubListCommon.gotoQueryConditionPage();
+		});
+
+		mui("#listview1").on('tap','.mui-table-view-cell',function(){
+			  //获取id
+			  var idx = this.getAttribute("myIdx");
+			  gotoDataDetail(idx);
+		})
+		
+		
+	</script>
+
+</html>

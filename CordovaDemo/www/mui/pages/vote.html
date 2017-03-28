@@ -1,0 +1,409 @@
+<!--我的投票页-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 300ms ease;
+				transition: transform 300ms ease;
+			}
+			
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #f7f7f8;
+			}
+			
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				width: auto;
+			}
+			
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+				transition: opacity 300ms ease, transform 300ms ease;
+			}
+			
+			.mui-page {
+				display: none;
+			}
+			
+			.mui-pages .mui-page {
+				display: block;
+			}
+			
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			
+			.head {
+				height: 40px;
+			}
+			
+			#head {
+				line-height: 40px;
+			}
+			
+			.head-img {
+				width: 40px;
+				height: 40px;
+			}
+			
+			#head-img1 {
+				position: absolute;
+				bottom: 10px;
+				right: 40px;
+				width: 40px;
+				height: 40px;
+			}
+			
+			.update {
+				font-style: normal;
+				color: #999999;
+				margin-right: -25px;
+				font-size: 15px
+			}
+			
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-ios .mui-navbar .mui-bar .mui-title {
+				position: static;
+			}
+		</style>
+		<link rel="stylesheet" href="../css/app.css">
+	</head>
+
+	<body class="mui-fullscreen">
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--页面主结构结束-->
+		<!--单页面开始-->
+		<div id="page1" class="mui-page">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<!-- 用在tab页面，隐藏返回按钮-->
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">投票</h1>
+				
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul id="listview1" class="mui-table-view">
+						
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--页面主内容区结束-->
+		</div>
+
+		<div id="page2" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>投票
+				</button>
+				<h1 id="pageTitle2" class="mui-center mui-title">XXX投票</h1>
+				<button id="btnSubmit" type="button" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">
+					<span class="mui-icon mui-icon-right-nav"></span>提交
+				</button>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul id="listview2" class="mui-table-view">
+						
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+	<script src="../js/mui.min.js "></script>
+	<script src="../js/mui.view.js "></script>
+	<script src="../libs/ProperWebPage.js" type="text/javascript"
+		charset="utf-8"></script>
+			<script src="../libs/zepto.min.js"></script>
+	<script>
+		//全局的投票信息
+
+		mui.init();
+		//初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#page1'
+		});
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+
+		var view = viewApi.view;
+		(function($) {
+			//处理view的后退与webview后退
+			$.back = function() {
+				if(viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					properWebPage.closeWebPage();
+				}
+			};
+			
+		})(mui);
+		//全局数据
+		var dataList1=[{'title':'ssssss'},{'title':'bbbbbb'}];
+		var dataList2=[{'title':'ssssss','detail':'dddddddddddddddddd','id':'111'},{'title':'bbbbbbb','detail':'bbbbbbb','id':'222'}];
+		document.addEventListener('deviceready', function() {
+			
+			var param = {
+					"path" : "demo/echarts",
+					"params" : {
+						"demoid" : "hahaha"
+					}
+				};
+			 properWebPage.showLoading();
+				properWebPage.requestServer(param, function(data) {
+					properWebPage.hideLoading();
+					//set dataList1
+					 initList1();
+					
+				});
+			 
+		}, false);
+		function initList1(){
+			var $list=$("#listview1");
+			$list.html('');
+			for(var i=0;i<dataList1.length;i++){
+				var m=dataList1[i];
+				var title=m.title;
+				var tpl='<li class="mui-table-view-cell">                       '+
+				'					<a class="mui-navigate-right"  href=\"javascript:onList1RowClick('+i+')\" >      '+
+				'						'+title+'                          '+
+				'					</a>                                '+
+				'				</li>                                   ';
+				$list.append(tpl);
+			}
+		}
+		function onList1RowClick(idx){
+			properWebPage.showLoading();
+			$("#pageTitle2").html(dataList1[idx].title);
+			
+			//提交服务器
+			var param = {
+					"path" : "demo/echarts",
+					"params" : {
+						"demoid" : "hahaha"
+					}
+				};
+				properWebPage.showLoading();
+				properWebPage.requestServer(param, function(data) {
+					properWebPage.hideLoading();
+					//set dataList2 
+					//加载数据
+					initList2();
+					viewApi.go("#page2");
+					
+				});
+			
+		}
+		function initList2(){
+			var $list=$("#listview2");
+			$list.html('');
+			for(var i=0;i<dataList2.length;i++){
+				var m=dataList2[i];
+				var title=m.title;
+				var detail=m.detail;
+				var tpl='<li class="mui-table-view-cell mui-collapse">                                                                 '+
+				'									<a id="listview2_title_'+i+'" class="mui-navigate-right" href="#">'+title+'</a>                        '+
+				'									<div class="mui-collapse-content">                                         '+
+				'										<p style="word-break:break-word;">                                     '+
+				detail+
+				'										</p>                                                                   '+
+				'										<ul class="mui-table-view" style="margin-bottom: 0px;" >               '+
+				'												<li class="mui-table-view-cell" >     '+
+				'													投一票                                                     '+
+				'													<div myidx=\"'+i+'\" id="listview2_switch_'+i+'"  class="myswitch-vote mui-switch  mui-switch-mini">      '+
+				'														<div class="mui-switch-handle"></div>                  '+
+				'													</div>                                                     '+
+				'												</li>                                                          '+
+				'										</ul>                                                                  '+
+				'									</div>                                                                     '+
+				'								</li>';
+				var $tpl=$(tpl);
+				$list.append($tpl);
+				var switchDomid='listview2_switch_'+i;
+				mui('#'+switchDomid).switch();
+				
+				document.getElementById(switchDomid).addEventListener("toggle", function(event) {
+					var str = JSON.stringify(event);
+					var myidx=$(event.target).attr('myidx');
+					var $title=$("#listview2_title_"+myidx);
+					if(event.detail.isActive) {
+						$title.css({'color':'blue'});
+					} else {
+						$title.css({'color':'black'});
+					}
+				});
+				
+			}
+			
+			
+			
+		}
+		
+		document.getElementById("btnSubmit").addEventListener('tap', function() {
+			var $list=$("#listview2");
+			var selectIdx=[];
+			$list.find('.myswitch-vote.mui-active').each(function(idx,dom){
+				$dom=$(dom);
+				selectIdx.push(parseInt($dom.attr('myidx')));
+			});
+			var str = JSON.stringify(selectIdx);
+			alert(str);
+			//提交服务器
+			var param = {
+					"path" : "demo/echarts",
+					"params" : {
+						"demoid" : "hahaha"
+					}
+				};
+				properWebPage.showLoading();
+				properWebPage.requestServer(param, function(data) {
+					properWebPage.hideLoading();
+					properWebPage.showToast("提交成功！");
+					mui.later(function(){
+						properWebPage.closeWebPage();
+					},500);
+				});
+			
+		});
+		
+		
+	</script>
+
+</html>

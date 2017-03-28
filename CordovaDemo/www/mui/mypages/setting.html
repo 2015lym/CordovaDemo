@@ -1,0 +1,860 @@
+<!--更多页-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>更多</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!-- iOS有一个默认开启的功能, 会把网页中的数字自动识别为电话号码, 并且改变文字的颜色和样式,这里关闭电话识别 -->
+		<meta name="format-detection" content = "telephone=no">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 300ms ease;
+				transition: transform 300ms ease;
+			}
+			
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #f7f7f8;
+			}
+			
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				width: auto;
+			}
+			
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+				transition: opacity 300ms ease, transform 300ms ease;
+			}
+			
+			.mui-page {
+				display: none;
+			}
+			
+			.mui-pages .mui-page {
+				display: block;
+			}
+			
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			
+			.head {
+				height: 40px;
+			}
+			
+			#head {
+				line-height: 40px;
+			}
+			
+			.head-img {
+				width: 40px;
+				height: 40px;
+			}
+			
+			#head-img1 {
+				position: absolute;
+				bottom: 10px;
+				right: 40px;
+				width: 40px;
+				height: 40px;
+			}
+			
+			.update {
+				font-style: normal;
+				color: #999999;
+				margin-right: -25px;
+				font-size: 15px
+			}
+			.rightSubTitle {
+				font-style: normal;
+				color: #999999;
+				font-size: 15px
+			}
+			
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-ios .mui-navbar .mui-bar .mui-title {
+				position: static;
+			}
+			/*去除隐私与安全页上页的灰线*/
+			.mui-table-view.mytableview:before{
+				height:0px;
+			}
+		</style>
+		<link rel="stylesheet" href="../css/app.css">
+	</head>
+
+	<body class="mui-fullscreen">
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--页面主结构结束-->
+		<!--单页面开始-->
+		<div id="setting" class="mui-page">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<!-- 用在tab页面，隐藏返回按钮-->
+				<button type="button" style="display: none;" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">更多</h1>
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell mui-media">
+								<a id="userInfoRow" class="mui-navigate-right">
+									<img class="mui-media-object mui-pull-left head-img" id="head-img" src="">
+									<div class="mui-media-body">
+										<span id="userInfoRow_field1"></span>
+										<p id="userInfoRow_field2" class='mui-ellipsis'></p>
+									</div>
+								</a>
+							</li>
+						</ul>
+
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#notifications" class="mui-navigate-right">新消息通知</a>
+							</li>
+							<li  class="mui-table-view-cell">
+								<a href="#privacy" class="mui-navigate-right">安全与隐私</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a href="#general" class="mui-navigate-right">通用</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a id="update" href="javascript:void(0);" class="mui-navigate-right">检查更新 <i  class="currentVersionText mui-pull-right update"></i></a>
+							</li>
+							<li  class="mui-table-view-cell">
+								<a href="#about" class="mui-navigate-right">关于我们 <i class="mui-pull-right update"></i></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li id="btnLogout" class="mui-table-view-cell" style="text-align: center;">
+								<a>退出登录</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--页面主内容区结束-->
+		</div>
+
+		<div id="notifications" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>更多
+				</button>
+				<h1 class="mui-center mui-title">新消息通知</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul style="display: none;" class="mui-table-view">
+							<li class="mui-table-view-cell">
+								通知显示消息详情
+								<div class="mui-switch mui-active mui-switch-mini">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+						<div style="display: none;" class="mui-content-padded">
+							<p>若关闭，当收到新消息时，通知提示将不显示发信人和内容摘要</p>
+						</div>
+
+						<ul style="display: none;" class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#notifications_disturb" class="mui-navigate-right">功能消息免打扰</a>
+							</li>
+						</ul>
+						<div style="display: none;" class="mui-content-padded">
+							<p>设置系统功能消息提示声音和震动的时段</p>
+						</div>
+						<ul style="display: none;" class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a>接收新消息通知<span class="mui-pull-right">已开启</span></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" id="rowSettingMsgSound">
+								声音
+								<div id="switchSettingMsgSound" class="mui-switch mui-active mui-switch-mini">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell" id="rowSettingMsgVibrate">
+								震动
+								<div id="switchSettingMsgVibrate" class="mui-switch mui-active mui-switch-mini">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+						<div class="mui-content-padded">
+							<p>当程序在运行时，你可以设置是否需要声音或者震动</p>
+						</div>
+						<div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="notifications_disturb" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>新消息通知
+				</button>
+				<h1 class="mui-center mui-title">功能消息免打扰</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view mui-table-view-radio">
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right">开启</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right">只在夜间开启</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right">关闭</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="privacy" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>更多
+				</button>
+				<h1 class="mui-center mui-title">安全与隐私</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul  class="mui-table-view mytableview">
+							<li class="mui-table-view-divider">帐号安全</li>
+							<li  class="mui-table-view-cell">
+								<a href="#pageChangePassword" class="mui-navigate-right">修改密码</a>
+							</li>
+							<li class="mui-table-view-divider">个人信息公开级别</li>
+							<li>
+							<ul id="radioPrivacyOpenLevel" style="margin-top: 0px;" class="mui-table-view mui-table-view-radio">
+								<li class="mui-table-view-cell" myval="10">
+									<a class="mui-navigate-right">
+										仅好友可见
+									</a>
+								</li>
+								<li class="mui-table-view-cell" myval="20">
+									<a class="mui-navigate-right">
+										好友和群成员可见
+									</a>
+								</li>
+								<li class="mui-table-view-cell"  myval="30">
+									<a class="mui-navigate-right">
+										内部成员可见
+									</a>
+								</li>
+								<li class="mui-table-view-cell"  myval="40">
+									<a class="mui-navigate-right">
+										全部可见
+									</a>
+								</li>
+							</ul>
+							</li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- changePassword start -->
+		<div id="pageChangePassword" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">修改密码</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div class="mui-content-padded" style="margin: 5px;">
+							<h5>原密码</h5>
+							<div class="mui-input-row mui-password">
+								<input id="txtOriginPassword" type="password" class="mui-input-password">
+							</div>
+							<h5>请录入新密码</h5>
+							<div class="mui-input-row mui-password">
+								<input id="txtNewPassword" type="password" class="mui-input-password">
+							</div>
+							<button id="btnChangePassword" type="button" style="padding-top: 10px;padding-bottom: 10px;" class="mui-btn mui-btn-primary mui-btn-block" >修改密码</button>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- changePassword end -->
+		
+		<div id="general" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>更多
+				</button>
+				<h1 class="mui-center mui-title">通用</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" id="rowSettingMsgSpeaker">
+								扬声器模式
+								<div id="switchSettingMsgSpeaker" class="mui-switch mui-active mui-switch-mini">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="about" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>更多
+				</button>
+				<h1 class="mui-center mui-title">关于我们</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div class="mui-text-center">
+							<p></p>
+							<a href="javascript:void(0);" target="view_window" ><img src="../images/logo.png" style="width: 80px;height: 80px;"></a>
+							<p ><span class="currentApplicationNameText">应用名称</span> <span class="currentVersionText"></span></p>
+						</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a id="btnFeedback" class="mui-navigate-right">意见反馈</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" id="btnDownloadPage">App下载地址</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a href="#aboutCompany" class="mui-navigate-right">关于普日软件</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="downloadPage" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>关于我们
+				</button>
+				<h1 class="mui-center mui-title">App下载地址</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div class="mui-text-center">
+							<p></p>
+							<a id="btnOpenDownloadPage" target="view_window" ><img id="imgAppDownloadQrcode" src="../images/qrcode.png" style="width:80%"></a>
+							<p>扫描二维码或点击二维码打开程序下载页</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="aboutCompany" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">关于普日软件</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div class="mui-text-center">
+							<p></p>
+							<a  ><img src="../images/proper_logo.png" style="width:80px;"></a>
+							<p><h4>沈阳普日软件技术有限公司</h4></p>
+							<p>做最<span style="font-size: larger;font-weight: bold;color:#e33633;">适合</span>的软件解决方案</p>
+							<div style="width:80%;margin: 0 auto;">
+							<div style="height:2px;background-color: #EE7942;"></div>
+								<p>辽宁省沈阳市铁西区卫工街建设大路兴隆大都会培训楼19楼1号</p>
+								<p></p>
+							</div>
+						</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a href="tel:024-31353260" >联系电话 <i  class="mui-pull-right rightSubTitle">024-31353260</i></a>
+							</li>
+								<li class="mui-table-view-cell">
+								<a href="mailto:gdpr@propersoft.cn" >联系邮箱 <i  class="mui-pull-right rightSubTitle">gdpr@propersoft.cn</i></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="../js/mui.min.js "></script>
+	<script src="../js/mui.view.js "></script>
+	<script src="../libs/ProperWebPage.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../libs/zepto.min.js"></script>
+	<script>
+		//全局的设置信息
+		var settingInfo={};
+		var initData={};
+		var pageInited=false;
+		function setSwitchIsOpen(domid, isopen) {
+//			alert(document.getElementById(domid).classList);
+			var isActive = document.getElementById(domid).classList.contains("mui-active");
+			if(isActive) {
+				if(!isopen) {
+					setSwitchToggle(domid);
+				}
+			} else {
+				if(isopen) {
+					setSwitchToggle(domid);
+				}
+			}
+		}
+		function setSwitchToggle(domid) {
+			mui("#" + domid).switch().toggle();
+		}
+		function setSettingSwitchListener(domid,settingKey) {
+			document.getElementById(domid).addEventListener("toggle", function(event) {
+//				if(event.detail.isActive) {
+//					alert("你启动了开关:"+domid);
+//				} else {
+//					alert("你关闭了开关:"+domid);
+//				}
+				if(settingInfo[settingKey]!=event.detail.isActive){
+					var params={};
+					params[settingKey]=event.detail.isActive;
+					settingInfo[settingKey]=event.detail.isActive;
+					saveSettingInfo(params);
+				}
+				
+		});
+		}
+		//cordova init start
+		document.addEventListener('deviceready', function() {
+			
+			//获取设置页的数据
+			getSettingInfo();
+			//获取初始化数据
+			properWebPage.getInitParam(function(data) {
+				initData=data;
+				pageInited=true;
+			});
+		}, false);
+		
+		//cordova init end
+		//获取当前的设置页到页面上
+		function getSettingInfo() {
+			properWebPage.nativeExec('Setting', 'getSettingInfo', [],function(data) {
+				//用户信息
+				var accountInfo = data.accountInfo || {};
+				if(accountInfo.loginname) {
+					document.getElementById("userInfoRow_field2").innerHTML = '帐号：' + accountInfo.loginname;
+				}
+				if(accountInfo.userName) {
+					document.getElementById("userInfoRow_field1").innerHTML = accountInfo.userName;
+				}
+				if(accountInfo.privacyOpenLevel){
+					setRadioPrivacyOpenLevel(accountInfo.privacyOpenLevel)
+				}else{
+					setRadioPrivacyOpenLevel(30)
+				}
+				if(accountInfo.avatar) {
+					document.getElementById("head-img").src = accountInfo.avatar;
+				}
+				//版本信息
+				var versionInfo = data.versionInfo || {};
+				if(versionInfo.versionName) {
+					$(".currentVersionText").text(versionInfo.versionName);
+					$(".currentApplicationNameText").text(versionInfo.applicationName);
+				}
+				
+				//设置信息
+				settingInfo = data.settingInfo || {};
+				setSwitchIsOpen('switchSettingMsgSound', settingInfo.settingMsgSound);
+				setSwitchIsOpen('switchSettingMsgVibrate', settingInfo.settingMsgVibrate);
+				setSwitchIsOpen('switchSettingMsgSpeaker', settingInfo.settingMsgSpeaker);
+			}, function(err) {
+				console.error(err);
+			});
+		}
+		//进入个人信息详情页
+		function goToAccountDetailPage() {
+			
+			properWebPage.nativeExec('Setting', 'goToAccountDetailPage', [],function(data) {
+				//console.log(data);
+				getSettingInfo();
+			}, function(err) {
+				console.error(err);
+			});
+		}
+		//检查程序新版本
+		function checkUpdateInfo() {
+			properWebPage.nativeExec('Setting', 'checkUpdateInfo', [{
+				"noNeedUpdateText": "已是最新版本，无需更新！"
+			}],function(data) {
+				console.log(data);
+			}, function(err) {
+				console.error(err);
+			});
+		}
+		//保存设置信息
+		function saveSettingInfo(kvs,func_suss,func_fail) {
+			properWebPage.nativeExec('Setting', 'saveSettingInfo', [kvs],func_suss,func_fail);
+		}
+		//退出登录
+		function logoutSystem(cleanPassword) {
+			if(!cleanPassword){
+				cleanPassword=false;
+			}
+			var kvs={"cleanPassword":cleanPassword};
+			properWebPage.nativeExec('Setting', 'logoutSystem', [kvs],function(data) {
+				console.log(data);
+			}, function(err) {
+				console.error(err);
+			});
+		}
+
+		mui.init();
+		//初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#setting'
+		});
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+
+		document.getElementById("userInfoRow_field1").innerHTML = '';
+		document.getElementById("userInfoRow_field2").innerHTML = '';
+		//默认头像
+		var headImg=document.getElementById("head-img");
+		var urlDefaultAvatar='../images/im/ease_default_avatar.png';
+		headImg.src = urlDefaultAvatar;
+		headImg.onerror=function(){headImg.src=urlDefaultAvatar}
+		//switch添加on/off监听
+		setSettingSwitchListener('switchSettingMsgSound','settingMsgSound');
+		setSettingSwitchListener('switchSettingMsgVibrate','settingMsgVibrate');
+		setSettingSwitchListener('switchSettingMsgSpeaker','settingMsgSpeaker');
+//		document.getElementById("rowSettingMsgSound").addEventListener('tap', function() {
+//			setSwitchToggle('switchSettingMsgSound');
+//		});
+//		document.getElementById("rowSettingMsgVibrate").addEventListener('tap', function() {
+//			setSwitchToggle('switchSettingMsgVibrate');
+//		});
+//		document.getElementById("rowSettingMsgSpeaker").addEventListener('tap', function() {
+//			setSwitchToggle('switchSettingMsgSpeaker');
+//		});
+		//意见反馈
+		document.getElementById("btnFeedback").addEventListener('tap', function() {
+			var args={};
+			args[K_SYSTEMID]=V_SYSTEMID_opinionFeedback;
+			args[K_TITLE]="意见反馈";
+			properWebPage.openTheApp(args,function(data) {
+				console.log(data);
+			}, function(err) {
+				console.error(err);
+			});
+		});
+		
+		//检查更新
+		document.getElementById("update").addEventListener('tap', function() {
+			checkUpdateInfo();
+		});
+		document.getElementById("userInfoRow").addEventListener('tap', function() {
+			goToAccountDetailPage();
+		});
+		document.getElementById("btnLogout").addEventListener('tap', function() {
+			logoutSystem(false);
+		});
+		document.getElementById("btnDownloadPage").addEventListener('tap', function() {
+			if(!pageInited){
+				return;
+			}
+			if(!settingInfo.downloadInfo){
+				/*
+				//服务端未实现接口时，先写死,后期服务端升级完，添加上此接口后再放开
+				var rtn={"result":"0","data":{"appDownloadUrl":"https://www.pgyer.com/sjoa_android","appDownloadQrcodeUrl":"../images/qrcode.png"}};
+				initConfigInfo(rtn);
+				return;*/
+				
+				
+				properWebPage.showLoading();
+				//提交服务器
+				var param = {
+						"path" : "/webController/getConfigInfo",
+						"params" : {
+						}
+					};
+					properWebPage.showLoading();
+					properWebPage.requestServer(param, function(rtn) {
+						properWebPage.hideLoading();
+						initConfigInfo(rtn);
+						viewApi.go("#downloadPage");
+					});
+			}else{
+				viewApi.go("#downloadPage");
+			}
+			
+		});
+		document.getElementById("btnChangePassword").addEventListener('tap', function() {
+			var originPassword=$("#txtOriginPassword").val();
+			var newPassword=$("#txtNewPassword").val();
+			if(!originPassword){
+				mui.alert('为了您的帐号安全，请输入您的原密码', '消息');
+				return;
+			}
+			if(!newPassword){
+				mui.alert('您要设置的新密码不能为空', '消息');
+				return;
+			}
+			if(newPassword){
+				var btnArray = ['取消', '确认'];
+				mui.confirm('您要设置的新密码为：“'+newPassword+"”,点击确认按钮进行密码修改？", '消息确认', btnArray, function(e) {
+					if (e.index == 1) {
+						//提交服务器
+							var param = {
+								"path" : "/webController/changeMyPassword",
+								"params" : {
+									"originPassword":originPassword,
+									"newPassword":newPassword
+								}
+							};
+							properWebPage.showLoading();
+							properWebPage.requestServer(param, function(rtn) {
+								properWebPage.hideLoading();
+								if(rtn['result']=='0'){
+									mui.alert("修改密码成功，页面将跳转到登录页，请您使用新密码重新登录", '消息',function(e) {
+										logoutSystem(true);//清空密码，并退出系统
+									});
+								}else{
+									var errmsg=rtn['errmsg']||"修改密码失败，请联系管理员！";
+									mui.alert(errmsg, '错误',function(e) {
+									});
+								}
+							});
+						
+					} else {
+						//cancel
+					}
+				});
+			}
+			
+		});
+		//更新用户的隐私级别
+		function setRadioPrivacyOpenLevel(nValue){
+			$(".mui-table-view.mui-table-view-radio#radioPrivacyOpenLevel li").each(function(index){
+				$self=$(this);
+				var myval=$self.attr('myval');
+				myval=parseInt(myval);
+				nValue=parseInt(nValue);
+				if(myval==nValue){
+					$self.addClass('mui-selected');
+				}else{
+					$self.removeClass('mui-selected');
+				}
+			});
+		}
+		var radioPrivacyOpenLevel = document.querySelector('.mui-table-view.mui-table-view-radio#radioPrivacyOpenLevel');
+		radioPrivacyOpenLevel.addEventListener('selected',function(e){
+			properWebPage.showLoading();
+			$self=$(e.detail.el);
+			var myval=$self.attr('myval');
+			myval=parseInt(myval);
+			var params={};
+			params['accountInfo']={"privacyOpenLevel":myval};
+			saveSettingInfo(params,function(){
+				properWebPage.hideLoading();
+			},function(){
+				properWebPage.hideLoading();
+			});
+		});
+		
+		//初始化全局配置信息
+		function initConfigInfo(rtn){
+			var appDownloadUrl=rtn.data.appDownloadUrl;
+			var appDownloadQrcodeUrl=rtn.data.appDownloadQrcodeUrl;
+			if(!appDownloadQrcodeUrl.isAbsoluteUrl()&&!appDownloadQrcodeUrl.startWith("../")){
+				appDownloadQrcodeUrl=initData.serviceBaseUrl+"/"+appDownloadQrcodeUrl;
+			}
+			settingInfo['downloadInfo']={'appDownloadUrl':appDownloadUrl,'appDownloadQrcodeUrl':appDownloadQrcodeUrl};
+			$("#imgAppDownloadQrcode").attr('src',appDownloadQrcodeUrl);
+		}
+		document.getElementById("btnOpenDownloadPage").addEventListener('tap', function() {
+			if(!pageInited){
+				return;
+			}
+			var appDownloadUrl=settingInfo['downloadInfo'].appDownloadUrl;
+			if(appDownloadUrl){
+				var btnArray = ['取消', '确定'];
+				mui.confirm('现在打开App下载页吗？', '消息确认', btnArray, function(e) {
+					if (e.index == 1) {
+						properWebPage.openUrlInBrowser(appDownloadUrl);
+					} else {
+						
+					}
+				})
+			}
+		});
+		
+		
+
+		var view = viewApi.view;
+		(function(mui) {
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			mui.back = function() {
+				if(viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+		})(mui);
+	</script>
+
+</html>
